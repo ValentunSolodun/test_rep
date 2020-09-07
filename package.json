@@ -3,11 +3,21 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@material-ui/core": "^4.11.0",
+    "@material-ui/icons": "^4.9.1",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "axios": "^0.19.2",
+    "lodash": "^4.17.20",
+    "query-string": "^6.13.1",
+    "ra-data-fakerest": "^3.6.2",
+    "ra-data-json-server": "^3.7.1",
+    "ra-data-simple-rest": "^3.7.1",
     "react": "^16.13.1",
+    "react-admin": "^3.4.2",
     "react-dom": "^16.13.1",
+    "react-final-form": "^6.5.1",
     "react-scripts": "3.4.1"
   },
   "scripts": {
@@ -30,5 +40,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "react-router-dom": "^5.2.0"
   }
 }
