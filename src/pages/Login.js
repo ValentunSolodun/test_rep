@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
     minHeight: '100vh',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    background: 'url(https://source.unsplash.com/random/1600x900)',
+    background: '#ececec',
     backgroundRepeat: 'no-repeat',
     backgroundSize: 'cover',
   },
@@ -117,7 +117,7 @@ const Login = ({ location }) => {
                 </Avatar>
               </div>
               <div className={classes.hint}>
-                Hint: demo(demo2) / 1111
+                Hint: u1 / 1
               </div>
               <div className={classes.form}>
                 <div className={classes.input}>
