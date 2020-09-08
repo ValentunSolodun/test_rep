@@ -1,8 +1,52 @@
 import {fetchUtils} from 'react-admin';
 import {stringify} from 'query-string';
 import _ from 'lodash';
+import {host} from './config';
 
-const apiUrl = 'http://localhost:3001/api';
+const transformIncomingData = (data, resource) => {
+  if (!data) return;
+  if (resource === 'customers') {
+    if (_.isArray(data)) {
+      return _.map(data, d => ({
+        ...d,
+        id: d.customer_id
+      }));
+    }
+    return {...data, id: data.customer_id};
+  }
+
+  if (resource === 'users') {
+    if (_.isArray(data)) {
+      return _.map(data, d => ({
+        ...d,
+        id: d.user_id
+      }));
+    }
+    return {...data, id: data.user_id};
+  }
+
+  if(resource === 'approvals') {
+    if (_.isArray(data)) {
+      return _.map(data, d => ({
+        ...d,
+        id: d.approval_id
+      }));
+    }
+    return {...data, id: data.approval_id};
+  }
+
+  if(resource === 'credits') {
+    if (_.isArray(data)) {
+      return _.map(data, d => ({
+        ...d,
+        id: d.payment_id
+      }));
+    }
+    return {...data, id: data.payment_id};
+  }
+
+  return data;
+};
 
 const httpClient = (url, options = {}) => {
   if (!options.headers) {
@@ -22,38 +66,36 @@ export default {
       range: JSON.stringify([(page - 1) * perPage, page * perPage - 1]),
       filter: JSON.stringify(params.filter),
     };
-    const url = `${apiUrl}/${resource}?${stringify(query)}`;
+    const url = `${host}/api/${resource}?${stringify(query)}`;
+
+    console.log('getList', resource, params);
 
     return httpClient(url).then(({headers, json}) => {
-      let data = json;
-      if (resource === 'customers') {
-        data = _.map(data, d => ({
-          ...d,
-          id: d.customer_id
-        }));
-      }
       return {
-        data,
+        data: transformIncomingData(json, resource),
         total: parseInt(headers.get('content-range').split('/').pop(), 10),
       }
     });
   },
 
   getOne: (resource, params) => {
-    return httpClient(`${apiUrl}/${resource}/${params.id}`).then(({json}) => ({
-      data: json,
+    console.log('getOne', resource, params);
+    return httpClient(`${host}/api/${resource}/${params.id}`).then(({json}) => ({
+      data: transformIncomingData(json, resource),
     }))
   },
 
   getMany: (resource, params) => {
+    console.log('getMany', resource, params);
     const query = {
       filter: JSON.stringify({id: params.ids}),
     };
-    const url = `${apiUrl}/${resource}?${stringify(query)}`;
-    return httpClient(url).then(({json}) => ({data: json}));
+    const url = `${host}/api/${resource}?${stringify(query)}`;
+    return httpClient(url).then(({json}) => ({data: transformIncomingData(json, resource)}));
   },
 
   getManyReference: (resource, params) => {
+    console.log('getManyReference', resource, params);
     const {page, perPage} = params.pagination;
     const {field, order} = params.sort;
     const query = {
@@ -64,50 +106,55 @@ export default {
         [params.target]: params.id,
       }),
     };
-    const url = `${apiUrl}/${resource}?${stringify(query)}`;
+    const url = `${host}/api/${resource}?${stringify(query)}`;
 
     return httpClient(url).then(({headers, json}) => ({
-      data: json,
+      data: transformIncomingData(json, resource),
       total: parseInt(headers.get('content-range').split('/').pop(), 10),
     }));
   },
 
-  update: (resource, params) =>
-    httpClient(`${apiUrl}/${resource}/${params.id}`, {
-      method: 'PUT',
-      body: JSON.stringify(params.data),
-    }).then(({json}) => ({data: json})),
-
-  updateMany: (resource, params) => {
-    const query = {
-      filter: JSON.stringify({id: params.ids}),
-    };
-    return httpClient(`${apiUrl}/${resource}?${stringify(query)}`, {
+  update: (resource, params) => {
+    console.log('update', resource, params);
+    return httpClient(`${host}/api/${resource}/${params.id}`, {
       method: 'PUT',
       body: JSON.stringify(params.data),
     }).then(({json}) => ({data: json}));
   },
+  updateMany: (resource, params) => {
+    console.log('updateMany', resource, params);
+    const query = {
+      filter: JSON.stringify({id: params.ids}),
+    };
+    return httpClient(`${host}/api/${resource}?${stringify(query)}`, {
+      method: 'PUT',
+      body: JSON.stringify(params.data),
+    }).then(({json}) => ({data: transformIncomingData(json, resource)}));
+  },
 
-  create: (resource, params) =>
-    httpClient(`${apiUrl}/${resource}`, {
+  create: (resource, params) => {
+    console.log('create', resource, params);
+    return httpClient(`${host}/api/${resource}`, {
       method: 'POST',
       body: JSON.stringify(params.data),
     }).then(({json}) => ({
       data: {...params.data, id: json.id},
-    })),
-
-  delete: (resource, params) =>
-    httpClient(`${apiUrl}/${resource}/${params.id}`, {
+    }));
+  },
+  delete: (resource, params) => {
+    console.log('delete', resource, params);
+    httpClient(`${host}/api/${resource}/${params.id}`, {
       method: 'DELETE',
-    }).then(({json}) => ({data: json})),
-
+    }).then(({json}) => ({data: transformIncomingData(json, resource)}));
+  },
   deleteMany: (resource, params) => {
+    console.log('deleteMany', resource, params);
     const query = {
       filter: JSON.stringify({id: params.ids}),
     };
-    return httpClient(`${apiUrl}/${resource}?${stringify(query)}`, {
+    return httpClient(`${host}/api/${resource}?${stringify(query)}`, {
       method: 'DELETE',
       body: JSON.stringify(params.data),
-    }).then(({json}) => ({data: json}));
+    }).then(({json}) => ({data: transformIncomingData(json, resource)}));
   },
 };
