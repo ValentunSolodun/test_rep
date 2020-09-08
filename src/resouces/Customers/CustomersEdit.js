@@ -4,6 +4,7 @@ import {
   ReferenceManyField,
   SimpleShowLayout,
   List,
+  BooleanInput,
   BooleanField,
   FormTab,
   TabbedForm,
@@ -13,26 +14,31 @@ import {
   ShowButton,
   SimpleList,
   SimpleForm,
+  DateTimeInput,
   TextInput,
   TextField
 } from 'react-admin';
+import UserAvatar from '../../components/UserAvatar';
 
 import {
   Tabs,
   Tab,
 } from '@material-ui/core';
+import UsersTab from './UsersTab';
+import ApprovalsTab from './ApprovalsTab';
+import CreditsTab from './CreditsTab';
 
 const TitleOfCustomer = ({record}) => <span>Customer {record.name}</span>
 
 export const CustomersEdit = (props) => {
 
-  const [currentTab, setCurrentTab] = useState('user-data');
+  const [currentTab, setCurrentTab] = useState('users');
 
   const tabs = [
-    {id: 'user-data', name: 'User Data'},
-    {id: 'user-subscription', name: 'User Subscription'},
-    {id: 'user-approvals', name: 'User Approvals'},
-    {id: 'credit-transactions', name: 'Credit Transactions'},
+    {id: 'users', name: 'User Data'},
+    {id: 'subscriptions', name: 'User Subscription'},
+    {id: 'approvals', name: 'User Approvals'},
+    {id: 'credits', name: 'Credit Transactions'},
     {id: 'call-log', name: 'Call Log'},
   ];
 
@@ -42,6 +48,16 @@ export const CustomersEdit = (props) => {
 
   return (
     <Fragment>
+      <Edit {...props}>
+        <SimpleForm>
+          <TextField label='Customer ID' source='customer_id' />
+          <DateTimeInput formClassName='inline' source="created_time" />
+          <DateTimeInput formClassName='inline'  source="updated_time" />
+          <TextInput label='Billing Data' source='billing_data' />
+          {/*<TextInput source="api_key" />*/}
+          <BooleanInput label="Enabled" source="enabled" />
+        </SimpleForm>
+      </Edit>
       <Tabs
         variant="fullWidth"
         centered
@@ -58,34 +74,14 @@ export const CustomersEdit = (props) => {
         ))}
       </Tabs>
       <div>
-        {currentTab === 'user-data' && (
-          <Edit {...props} title={<TitleOfCustomer/>}>
-            <ReferenceManyField
-              reference="users"
-              target="customer_id"
-              addLabel={false}
-              fullWidth
-            >
-              <Datagrid>
-                <NumberField source="user_id"/>
-                {/*<NumberField source="customer_user_id"/>*/}
-                <BooleanField source="is_online" valueLabelTrue="True" valueLabelFalse="False"/>
-                <TextField source="x_data.name"/>
-                <TextField source="x_data.passion"/>
-                <TextField source="x_data.truth"/>
-                <TextField source="x_data.img_src"/>
-                <DateField source="created_time" showTime/>
-                <DateField source="updated_time" showTime/>
-                <EditButton/>
-              </Datagrid>
-            </ReferenceManyField>
-          </Edit>
+        {currentTab === 'users' && (
+          <UsersTab {...props} />
         )}
 
-        {currentTab === 'user-subscription' && (
+        {currentTab === 'subscriptions' && (
           <Edit {...props} title={<TitleOfCustomer/>}>
             <ReferenceManyField
-              reference="user-subscription"
+              reference="subscriptions"
               target="customer_user_id"
               addLabel={false}
               fullWidth
@@ -106,23 +102,12 @@ export const CustomersEdit = (props) => {
           </Edit>
         )}
 
-        {currentTab === 'user-approvals' && (
-          <Edit {...props} title={<TitleOfCustomer/>}>
-            <ReferenceManyField
-              reference="user-approvals"
-              target="customer_user_id"
-              addLabel={false}
-              fullWidth
-            >
-              <Datagrid>
-                <NumberField source="id"/>
-                <NumberField source="approving_user_id"/>
-                <NumberField source="approved_user_id"/>
-                <NumberField source="approved_status"/>
-                <DateField source="status_change" showTime />
-              </Datagrid>
-            </ReferenceManyField>
-          </Edit>
+        {currentTab === 'approvals' && (
+          <ApprovalsTab {...props} />
+        )}
+
+        {currentTab === 'credits' && (
+          <CreditsTab {...props} />
         )}
       </div>
 
