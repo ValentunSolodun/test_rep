@@ -3,10 +3,12 @@ import {
   Datagrid,
   EditButton,
   List,
+  TextField,
   NumberField,
   BooleanField,
   DateField
 } from 'react-admin';
+
 import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import { stringify } from 'query-string';
@@ -39,9 +41,9 @@ export const UserList = (props) => {
   return (
     <List {...props}>
       <Datagrid>
-        <NumberField source="id"/>
-        <NumberField source="user_id"/>
-        <NumberField source="customer_user_id"/>
+        <TextField source="id"/>
+        <TextField source="user_id"/>
+        <TextField source="customer_user_id"/>
         <BooleanField source="is_active" valueLabelTrue="True" valueLabelFalse="False"/>
         <DateField source="created" showTime />
         <DateField source="modified" showTime />

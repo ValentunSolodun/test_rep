@@ -25,9 +25,9 @@ const App = () => {
     >
       <Resource name="customers" {...customers}/>
       <Resource name="users" {...users}/>
-      <Resource name="user-subscription" {...subscriptions}/>
-      <Resource name="user-approvals" {...approvals}/>
-      <Resource name="credit-transactions" {...transactions}/>
+      <Resource name="subscription" {...subscriptions}/>
+      <Resource name="approvals" {...approvals}/>
+      <Resource name="credits" {...transactions}/>
       <Resource name="call-log" {...callLog}/>
       {/*<Resource name="video-system-data" {...videoSystemData}/>*/}
     </Admin>
