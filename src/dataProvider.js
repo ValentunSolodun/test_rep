@@ -19,13 +19,14 @@ const transformIncomingData = (data, resource) => {
     if (_.isArray(data)) {
       return _.map(data, d => ({
         ...d,
+        x_data: JSON.stringify(d.x_data, null, 2),
         id: d.user_id
       }));
     }
-    return {...data, id: data.user_id};
+    return {...data, id: data.user_id, x_data: JSON.stringify(data.x_data, null, 2)};
   }
 
-  if(resource === 'approvals') {
+  if (resource === 'approvals') {
     if (_.isArray(data)) {
       return _.map(data, d => ({
         ...d,
@@ -35,14 +36,14 @@ const transformIncomingData = (data, resource) => {
     return {...data, id: data.approval_id};
   }
 
-  if(resource === 'credits') {
+  if (resource === 'credits') {
     if (_.isArray(data)) {
       return _.map(data, d => ({
         ...d,
-        id: d.payment_id
+        id: d.credit_id
       }));
     }
-    return {...data, id: data.payment_id};
+    return {...data, id: data.credit_id};
   }
 
   return data;
@@ -138,14 +139,14 @@ export default {
       method: 'POST',
       body: JSON.stringify(params.data),
     }).then(({json}) => ({
-      data: {...params.data, id: json.id},
+      data: transformIncomingData(json, resource)
     }));
   },
   delete: (resource, params) => {
     console.log('delete', resource, params);
-    httpClient(`${host}/api/${resource}/${params.id}`, {
+    return httpClient(`${host}/api/${resource}/${params.id}`, {
       method: 'DELETE',
-    }).then(({json}) => ({data: transformIncomingData(json, resource)}));
+    }).then(({json}) => ({data: json}));
   },
   deleteMany: (resource, params) => {
     console.log('deleteMany', resource, params);

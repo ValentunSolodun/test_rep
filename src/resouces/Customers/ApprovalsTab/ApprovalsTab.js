@@ -1,20 +1,18 @@
 import React from 'react';
-import {Datagrid, DateField, Edit, NumberField, Pagination, ReferenceManyField, TextField} from 'react-admin';
+import {Datagrid, DateField, Edit, NumberField, Pagination, ReferenceManyField, TextField, DeleteButton,} from 'react-admin';
 
-const TitleOfCustomer = ({record}) => <span>Customer {record.name}</span>
-
-const ApprovalsTab = (props) => {
+const ApprovalsTab = ({target, ...props}) => {
   return (
-    <Edit {...props} title={<TitleOfCustomer/>}>
+    <Edit {...props} title=''>
       <ReferenceManyField
         reference="approvals"
-        target="customer_id"
+        target={target}
         addLabel={false}
         pagination={<Pagination />}
         fullWidth
       >
         <Datagrid rowClick='edit'>
-          <NumberField label='ID' source="approval_id"/>
+          <NumberField label='Approval ID' source="approval_id"/>
           <NumberField label='User ID' source="user_id"/>
           <NumberField label='Target ID' source="target_id"/>
           <DateField source="created_time" showTime/>
@@ -23,6 +21,7 @@ const ApprovalsTab = (props) => {
           <TextField source='approval' />
           <TextField source='user_approval' />
           <TextField source='target_approval' />
+          <DeleteButton />
         </Datagrid>
       </ReferenceManyField>
     </Edit>

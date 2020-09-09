@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   BooleanField,
+  BooleanInput,
   Datagrid,
   DateField,
   Edit,
@@ -8,35 +9,39 @@ import {
   NumberField,
   Pagination,
   ReferenceManyField,
-  TextField
+  TextField,
+  DeleteButton,
 } from 'react-admin';
-import UserAvatar from '../../../components/UserAvatar';
 
-const TitleOfCustomer = ({record}) => <span>Customer {record.name}</span>
+const UsersTab = ({target, ...props}) => {
 
-const UsersTab = (props) => {
   return (
-    <Edit {...props} title= {<TitleOfCustomer/>}>
+
+    <Edit {...props} title=''>
       <ReferenceManyField
         reference="users"
-        target="customer_id"
-        pagination={<Pagination />}
+        target={target}
+        pagination={<Pagination/>}
         addLabel={false}
         fullWidth
       >
         <Datagrid rowClick="edit">
-          <NumberField label='ID' source="user_id"/>
+          <NumberField label='User ID' source="user_id"/>
           <NumberField label='Customer User ID' source="customer_user_id"/>
-          <TextField source="availability"/>
-          <BooleanField source="is_online" valueLabelTrue="True" valueLabelFalse="False"/>
-          <DateField source="created_time" showTime/>
-          <DateField source="updated_time" showTime/>
           <NumberField label='Customer ID' source="customer_id"/>
-          <TextField label='Name' source="x_data.name"/>
-          <TextField label='Passion' source="x_data.passion"/>
-          <TextField label='Truth' source="x_data.truth"/>
-          <UserAvatar label='Img' source="x_data.img_src"/>
-          {/*<EditButton/>*/}
+          <BooleanField source="is_online" valueLabelTrue="True" valueLabelFalse="False"/>
+          <TextField label='X Data' source="x_data"/>
+
+          <BooleanField label="Approve All" source="settings.approveAll"/>
+          <BooleanField label="Notification In Time" source="settings.notificationInTime"/>
+          <DateField showTime options={{hour12: true, hour: '2-digit', minute: '2-digit'}}
+                     label="Notification In Time End" source="settings.notificationInTimeEnd"/>
+          <DateField showTime options={{hour12: true, hour: '2-digit', minute: '2-digit'}}
+                     label="Notification In Time Start" source="settings.notificationInTimeStart"/>
+          <BooleanField label="Voice Emotional Analysis" source="settings.voiceEmotionalAnalysis"/>
+          <BooleanField label="Notification Offline Calls" source="settings.notificationOfflineCalls"/>
+          <BooleanField label="Notification Dating Service" source="settings.notificationDatingService"/>
+          <DeleteButton/>
         </Datagrid>
       </ReferenceManyField>
     </Edit>

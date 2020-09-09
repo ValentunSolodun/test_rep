@@ -1,9 +1,9 @@
 import {CustomersList} from './CustomersList';
 import {CustomersEdit} from './CustomersEdit';
-// import {UserEdit} from './UserSubscriptionList';
+import {CustomersCreate} from './CustomersCreate';
 
 export default {
   list: CustomersList,
   edit: CustomersEdit,
-  // edit: UserEdit,
+  create: CustomersCreate,
 }
