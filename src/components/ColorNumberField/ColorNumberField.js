@@ -1,17 +1,20 @@
 import React from 'react';
-import { NumberField } from 'react-admin';
+import {NumberField} from 'react-admin';
+import _ from 'lodash';
 
 const colored = WrappedComponent => {
-  const Colored = props =>
-    props.record[props.source] < 0 ? (
-      <span style={{ color: 'red' }}>
+  const Colored = props => {
+    const amount = _.get(props.record, props.source);
+    return amount < 0 ? (
+      <span style={{color: 'red'}}>
                 <WrappedComponent {...props} />
             </span>
     ) : (
-      <span style={{ color: 'green' }}>
+      <span style={{color: 'green'}}>
         <WrappedComponent {...props} />
       </span>
     );
+  }
 
   Colored.displayName = `Colored(${WrappedComponent.displayName})`;
 
