@@ -1,55 +1,31 @@
 import React from 'react';
 import {
-  Datagrid,
-  DateField,
   BooleanInput,
+  Create,
   DateTimeInput,
-  ShowButton,
-  EditButton,
-  ReferenceManyField,
-  TextInput,
-  SimpleForm,
-  NumberInput,
-  ThumbnailField,
-  ProductRefField,
-  RichTextField,
   Edit,
   NumberField,
-  Show,
-  FormTab,
-  useTranslate,
-  Tab,
-  TabbedShowLayout,
+  NumberInput, SelectInput,
+  SimpleForm,
   TextField,
-  SelectInput,
-  List,
-  ChipField,
-  SingleFieldList,
-  Resource, BooleanField
+  TextInput
 } from 'react-admin';
-import users from './index';
-import UserAvatar from '../../components/UserAvatar';
-import { Divider } from '@material-ui/core';
+import RichTextInput from 'ra-input-rich-text';
+import {Divider} from '@material-ui/core';
+import CustomNumberInput from '../../components/CustomNumberInput';
 
-const CategoryTitle = ({record}) => {
+export const ApprovalCreate = (props) => {
   return (
-    <span>{record.name}</span>
-  );
-};
-
-export const UserApprovalsEdit = props => {
-  return (
-    <Edit title={<CategoryTitle/>} {...props}>
+    <Create {...props}>
       <SimpleForm>
-        <NumberField label='ID' source="approval_id"/>
-        <NumberField label='User ID' source="user_id"/>
-        <div />
-        <DateTimeInput formClassName='inline' source="created_time" showTime/>
-        <DateTimeInput formClassName='inline' source="updated_time" showTime/>
+        <NumberInput formClassName='inline' label='Approval ID' source="approval_id"/>
+        <NumberInput formClassName='inline' label='User ID' source="user_id"/>
+        <NumberInput formClassName='inline' label='Target ID' source="target_id"/>
         <div />
         <SelectInput formClassName='inline' source='status' choices={[
           { id: 'approved', name: 'Approved' },
           { id: 'not_approved', name: 'Not Approved' },
+          { id: 'pending', name: 'Pending' },
           { id: 'declined', name: 'Declined' },
         ]}/>
         <SelectInput formClassName='inline' source='approval' choices={[
@@ -69,6 +45,6 @@ export const UserApprovalsEdit = props => {
           { id: 'game', name: 'Game' },
         ]}/>
       </SimpleForm>
-    </Edit>
+    </Create>
   )
 };
